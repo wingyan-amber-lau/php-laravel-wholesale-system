@@ -1,5 +1,5 @@
 # php-laravel-wholesale-system
-## An Upgraded version from [https://github.com/wingyan-amber-lau/Wholesale_System](https://github.com/wingyan-amber-lau/Wholesale_System)
+### An Upgraded version from [https://github.com/wingyan-amber-lau/Wholesale_System](https://github.com/wingyan-amber-lau/Wholesale_System)
 
 Wholesale System is a web application that provide various management functions for wholesale operations as follows:  
 
@@ -24,8 +24,8 @@ The system provided with database migration script. The database schema is reusa
 ## Upcoming
 
 - Separate web and api server
-- Redesign using interface
-- Building frontend with React
+- Redesign user interface
+- Build frontend with React
 
 ## Possible Enhancement
 
