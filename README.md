@@ -21,6 +21,33 @@ The system provided with database migration script. The database schema is reusa
 - MySQL 8
 - Laravel Sail with Docker 
 
+## Installation
+**Prerequisite**
+- Docker
+- WSL2 (Window)
+- PHP
+- Composer
+
+``` 
+composer install
+```
+
+```
+docker comopse up
+```
+
+In docker container,
+```
+npm install
+php artisan migrate
+```
+
+## Setup
+You need to set up the following before creating invoice.
+- Category
+- District
+- Product
+- Customer
 ## Upcoming
 
 - Separate web and api server
