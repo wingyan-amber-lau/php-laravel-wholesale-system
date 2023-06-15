@@ -1,0 +1,51 @@
+@extends('layouts.page')
+
+
+@section('content')
+<h1>每日結算</h1>
+<form>
+@csrf
+<table class="ml-3">
+<tr>
+<th>結算日期</th>
+<td><input type="text" name="balance-date" id="balance-date" value="{{$balance_date}}" onchange="form.submit();"/></td>
+</tr>
+</table>
+<table class="table table-borderless">
+<tr>
+    <td style="vertical-align:top">
+        <table class="table table-striped">
+            <tr class="text-center"><th colspan="3">收入</th></tr>
+            <tr class="text-center"><td></td><th>應收(白單)</th><th>現金(紅單)</th></tr>
+            <tr><th>車1</th><td><input type="number" step="0.01" name="1-pend-amount" id="1-pend-amount" data-type="income" data-field="pending_amount" data-item="DELV" data-descr="CAR1" value="{{isset($income['DELV']['CAR1']['pending_amount'])?$income['DELV']['CAR1']['pending_amount']:''}}"/></td><td><input type="number" step="0.01" name="1-received-amount" id="1-received-amount" data-type="income" data-field="received_amount" data-item="DELV" data-descr="CAR1" value="{{isset($income['DELV']['CAR1']['received_amount'])?$income['DELV']['CAR1']['received_amount']:''}}"/></td></tr>
+            <tr><th>車2</th><td><input type="number" step="0.01" name="2-pend-amount" id="2-pend-amount" data-type="income" data-field="pending_amount" data-item="DELV" data-descr="CAR2" value="{{isset($income['DELV']['CAR2']['pending_amount'])?$income['DELV']['CAR2']['pending_amount']:''}}"/></td><td><input type="number" step="0.01" name="2-received-amount" id="2-received-amount" data-type="income" data-field="received_amount" data-item="DELV" data-descr="CAR2" value="{{isset($income['DELV']['CAR2']['received_amount'])?$income['DELV']['CAR2']['received_amount']:''}}"/></td></tr>
+            <tr><th>車3</th><td><input type="number" step="0.01" name="3-pend-amount" id="3-pend-amount" data-type="income" data-field="pending_amount" data-item="DELV" data-descr="CAR3" value="{{isset($income['DELV']['CAR3']['pending_amount'])?$income['DELV']['CAR3']['pending_amount']:''}}"/></td><td><input type="number" step="0.01" name="3-received-amount" id="3-received-amount" data-type="income" data-field="received_amount" data-item="DELV" data-descr="CAR3" value="{{isset($income['DELV']['CAR3']['received_amount'])?$income['DELV']['CAR3']['received_amount']:''}}"/></td></tr>
+            <tr><th>車4</th><td><input type="number" step="0.01" name="4-pend-amount" id="4-pend-amount" data-type="income" data-field="pending_amount" data-item="DELV" data-descr="CAR4" value="{{isset($income['DELV']['CAR4']['pending_amount'])?$income['DELV']['CAR4']['pending_amount']:''}}"/></td><td><input type="number" step="0.01" name="4-received-amount" id="4-received-amount" data-type="income" data-field="received_amount" data-item="DELV" data-descr="CAR4" value="{{isset($income['DELV']['CAR4']['received_amount'])?$income['DELV']['CAR4']['received_amount']:''}}"/></td></tr>
+            <tr><th>車5</th><td><input type="number" step="0.01" name="5-pend-amount" id="5-pend-amount" data-type="income" data-field="pending_amount" data-item="DELV" data-descr="CAR5" value="{{isset($income['DELV']['CAR5']['pending_amount'])?$income['DELV']['CAR5']['pending_amount']:''}}"/></td><td><input type="number" step="0.01" name="5-received-amount" id="5-received-amount" data-type="income" data-field="received_amount" data-item="DELV" data-descr="CAR5" value="{{isset($income['DELV']['CAR5']['received_amount'])?$income['DELV']['CAR5']['received_amount']:''}}"/></td></tr>
+        </table>
+    </td>
+    <td>
+        <table class="table table-striped">
+            <tr class="text-center"><th colspan="3">支出</th></tr>
+            <tr class="text-center"><td></td><th>應付帳款</th><th>現金</th></tr>
+            <tr><th colspan="3">入貨</th></tr>
+            <tr><td><input type="text" name="1-importer" id="1-importer" data-type="expense" data-field="item_descr" data-item="IMPORTOR1" data-descr="IMPORT1" value="{{isset($expenditure['IMPORTOR1']['item_descr'])?$expenditure['IMPORTOR1']['item_descr']:''}}"/></td><td><input type="number" step="0.01" name="1-cost" id="1-cost" data-type="expense" data-field="cost" data-item="IMPORTOR1" data-descr="IMPORT1" value="{{isset($expenditure['IMPORTOR1']['cost'])?$expenditure['IMPORTOR1']['cost']:''}}"/></td><td><input type="number" step="0.01" name="1-cash" id="1-cash" data-type="expense" data-field="paid_amount" data-item="IMPORTOR1" data-descr="IMPORT1"  value="{{isset($expenditure['IMPORTOR1']['paid_amount'])?$expenditure['IMPORTOR1']['paid_amount']:''}}"/></td></tr>
+            <tr><td><input type="text" name="2-importer" id="2-importer" data-type="expense" data-field="item_descr" data-item="IMPORTOR2" data-descr="IMPORT2" value="{{isset($expenditure['IMPORTOR2']['item_descr'])?$expenditure['IMPORTOR2']['item_descr']:''}}"/></td><td><input type="number" step="0.01" name="2-cost" id="2-cost" data-type="expense" data-field="cost" data-item="IMPORTOR2" data-descr="IMPORT2" value="{{isset($expenditure['IMPORTOR2']['cost'])?$expenditure['IMPORTOR2']['cost']:''}}"/></td><td><input type="number" step="0.01" name="2-cash" id="2-cash" data-type="expense" data-field="paid_amount" data-item="IMPORTOR2" data-descr="IMPORT2"  value="{{isset($expenditure['IMPORTOR2']['paid_amount'])?$expenditure['IMPORTOR2']['paid_amount']:''}}"/></td></tr>
+            <tr><td><input type="text" name="3-importer" id="3-importer" data-type="expense" data-field="item_descr" data-item="IMPORTOR3" data-descr="IMPORT3" value="{{isset($expenditure['IMPORTOR3']['item_descr'])?$expenditure['IMPORTOR3']['item_descr']:''}}"/></td><td><input type="number" step="0.01" name="3-cost" id="3-cost" data-type="expense" data-field="cost" data-item="IMPORTOR3" data-descr="IMPORT3" value="{{isset($expenditure['IMPORTOR3']['cost'])?$expenditure['IMPORTOR3']['cost']:''}}"/></td><td><input type="number" step="0.01" name="3-cash" id="3-cash" data-type="expense" data-field="paid_amount" data-item="IMPORTOR3" data-descr="IMPORT3"  value="{{isset($expenditure['IMPORTOR3']['paid_amount'])?$expenditure['IMPORTOR3']['paid_amount']:''}}"/></td></tr>
+            <tr><td><input type="text" name="4-importer" id="4-importer" data-type="expense" data-field="item_descr" data-item="IMPORTOR4" data-descr="IMPORT4" value="{{isset($expenditure['IMPORTOR4']['item_descr'])?$expenditure['IMPORTOR4']['item_descr']:''}}"/></td><td><input type="number" step="0.01" name="4-cost" id="4-cost" data-type="expense" data-field="cost" data-item="IMPORTOR4" data-descr="IMPORT4" value="{{isset($expenditure['IMPORTOR4']['cost'])?$expenditure['IMPORTOR4']['cost']:''}}"/></td><td><input type="number" step="0.01" name="4-cash" id="4-cash" data-type="expense" data-field="paid_amount" data-item="IMPORTOR4" data-descr="IMPORT4"  value="{{isset($expenditure['IMPORTOR4']['paid_amount'])?$expenditure['IMPORTOR4']['paid_amount']:''}}"/></td></tr>
+            <tr><td><input type="text" name="5-importer" id="5-importer" data-type="expense" data-field="item_descr" data-item="IMPORTOR5" data-descr="IMPORT5" value="{{isset($expenditure['IMPORTOR5']['item_descr'])?$expenditure['IMPORTOR5']['item_descr']:''}}"/></td><td><input type="number" step="0.01" name="5-cost" id="5-cost" data-type="expense" data-field="cost" data-item="IMPORTOR5" data-descr="IMPORT5" value="{{isset($expenditure['IMPORTOR5']['cost'])?$expenditure['IMPORTOR5']['cost']:''}}"/></td><td><input type="number" step="0.01" name="5-cash" id="5-cash" data-type="expense" data-field="paid_amount" data-item="IMPORTOR5" data-descr="IMPORT5"  value="{{isset($expenditure['IMPORTOR5']['paid_amount'])?$expenditure['IMPORTOR5']['paid_amount']:''}}"/></td></tr>
+            <tr><td><input type="text" name="6-importer" id="6-importer" data-type="expense" data-field="item_descr" data-item="IMPORTOR6" data-descr="IMPORT6" value="{{isset($expenditure['IMPORTOR6']['item_descr'])?$expenditure['IMPORTOR6']['item_descr']:''}}"/></td><td><input type="number" step="0.01" name="6-cost" id="6-cost" data-type="expense" data-field="cost" data-item="IMPORTOR6" data-descr="IMPORT6" value="{{isset($expenditure['IMPORTOR6']['cost'])?$expenditure['IMPORTOR6']['cost']:''}}"/></td><td><input type="number" step="0.01" name="6-cash" id="6-cash" data-type="expense" data-field="paid_amount" data-item="IMPORTOR6" data-descr="IMPORT6"  value="{{isset($expenditure['IMPORTOR6']['paid_amount'])?$expenditure['IMPORTOR6']['paid_amount']:''}}"/></td></tr>
+            <tr><th>停車場費用</th><td><input type="number" step="0.01" id="parking-fee-cost" name="parking-fee-cost" data-type="expense" data-field="cost" data-item="FEE1" data-descr="PARKING"></td><td><input type="number" step="0.01" id="parking-fee-paid" name="parking-fee-paid" data-type="expense" data-field="paid_amount" data-item="FEE1" data-descr="PARKING"></td></tr>
+            <tr><th>管理費</th><td><input type="number" step="0.01" id="security-fee-cost" name="security-fee-cost" data-type="expense" data-field="cost" data-item="FEE2" data-descr="SECURE"></td><td><input type="number" step="0.01" id="security-fee-paid" name="security-fee-paid" data-type="expense" data-field="paid_amount" data-item="FEE2" data-descr="SECURE"></td></tr>
+            <tr><th>租金</th><td><input type="number" step="0.01" id="rental-fee-cost" name="rental-fee-cost" data-type="expense" data-field="cost" data-item="FEE3" data-descr="RENT"></td><td><input type="number" step="0.01" id="rental-fee-paid" name="rental-fee-paid" data-type="expense" data-field="paid_amount" data-item="FEE3" data-descr="RENT"></td></tr>
+            <tr><th>電話費</th><td><input type="number" step="0.01" id="phone-fee-cost" name="phone-fee-cost" data-type="expense" data-field="cost" data-item="FEE4" data-descr="PHONE"></td><td><input type="number" step="0.01" id="phone-fee-paid" name="phone-fee-paid" data-type="expense" data-field="paid_amount" data-item="FEE4" data-descr="PHONE"></td></tr>
+
+        </table>
+    </td>
+</tr>
+</table>
+</form>
+<link rel="stylesheet" href="{{asset('css/bootstrap-datepicker.css')}}">
+<script src="{{asset('js/bootstrap-datepicker.js')}}"></script>
+<script src="{{asset('js/statistics/dailySettlement.js')}}"></script>
+@endsection

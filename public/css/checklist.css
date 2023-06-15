@@ -1,0 +1,53 @@
+.checklist-box{
+    width:100px;
+    height:100px;
+    display:inline-block;
+    position:relative;
+    border:1px solid grey;
+    vertical-align:middle;
+    text-align:center;
+    margin:0px;
+}
+
+.checklist-customer{
+    position:absolute;
+    top:0;
+    left:0;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.cross{
+    position:absolute;
+    /*display:none;*/
+    top:50%;
+    right:5%;
+}
+
+.circle{
+    position:absolute;
+    /*display:none;*/
+    top:50%;
+    right:5%;
+}
+
+.checklist-district{
+    font-size:25px;
+}
+
+.checklist-symbol{
+    font-size:24px;
+    font-weight: bold;
+    color:red;
+    opacity: 0.5;
+}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Opera and Firefox */
+  }
