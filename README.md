@@ -21,12 +21,13 @@ The system provided with database migration script. The database schema is reusa
 - MySQL 8
 - Laravel Sail with Docker 
 
-## Installation
-**Prerequisite**
+## Prerequisite
 - Docker
 - WSL2 (Window)
 - PHP
 - Composer
+
+## Installation
 
 ``` 
 composer install
