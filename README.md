@@ -29,6 +29,9 @@ The system provided with database migration script. The database schema is reusa
 
 ## Installation
 
+Copy .env.example to .env <br>
+Update DB_USERNAME and DB_PASSWORD as desired.
+
 ``` 
 composer install
 ```
@@ -42,7 +45,7 @@ In docker container,
 npm install
 php artisan migrate
 ```
-
+Access [http://localhost](http://localhost) and click "GENERATE APP KEY" button if you got "Your app key is missing" error.
 ## Setup
 You need to set up the following before creating invoice.
 - Category
