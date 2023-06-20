@@ -19,10 +19,10 @@ class AddColumnsToInvoicesTable extends Migration
     {
         Schema::table('invoices', function (Blueprint $table) {
             $table->string('district_name')->after('district_code');
-            $table->integer('car_no')->after('district_name');
-            $table->integer('order_in_car')->after('car_no');
-            $table->string('payment_status')->after('remarks');
-            $table->string('status')->after('payment_status');
+            // $table->integer('car_no')->after('district_name');
+            // $table->integer('order_in_car')->after('car_no');
+            $table->string('payment_status')->after('remarks')->default('NONE');
+            $table->string('status')->after('payment_status')->nullable();
             //
         });
     }

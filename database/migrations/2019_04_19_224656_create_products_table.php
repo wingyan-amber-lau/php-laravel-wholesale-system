@@ -21,6 +21,7 @@ class CreateProductsTable extends Migration
             $table->increments('id');
             $table->string('product_code');
             $table->string('product_name');
+            $table->integer('inner_packing');
             $table->string('unit');
             $table->decimal('unit_price',8,2);
             $table->decimal('unit_cost',8,2);

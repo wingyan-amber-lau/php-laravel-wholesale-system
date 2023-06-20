@@ -13,7 +13,7 @@ return new class extends Migration
     {
         DB::table('invoice_settings')->insert(
             array(
-                'text' => 'invoice settings'
+                'text' => 'please edit invoice settings'
             )
         );
     }
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        DB::table('invoice_settings')->truncate();
     }
 };

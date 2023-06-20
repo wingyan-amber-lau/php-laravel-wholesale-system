@@ -93,15 +93,15 @@
                     <td colspan="3"><input type="checkbox" class="form-control" id="count-inventory" name="count-inventory"/></td>
                 </tr>
             </table>
-            <div>
+            <!-- <div>
                 其他種類 <i class="fas fa-plus-square blue btn-fa" onclick="appendCategory()"></i>
                 <input type="hidden" id="category-iteration" name="category-iteration" value="0"/>
-                <table id="category-table" class="table table-hover table-borderless">
+                <table id="category-table" class="table table-hover table-borderless"> -->
                 <!--<tr>
                     <th><i class="fa fa-minus-square"></i> 種類：</th><td><select id="category-id" name="category-id" class="form-control"><option></option></select></td><th>類別：</th><td><select id="category-value-id" name="category-value-id" class="form-control"><option></option></select></td>
                 </tr>-->
-                </table>
-            </div>
+                <!-- </table>
+            </div> -->
 
       </div>
       <div class="modal-footer">
