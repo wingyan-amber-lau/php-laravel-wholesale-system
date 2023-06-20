@@ -23,7 +23,8 @@ class CreateCustomerSellingPricesTable extends Migration
             $table->string('product_code');
             $table->decimal('unit_price',8,2);
             $table->string('updated_by');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

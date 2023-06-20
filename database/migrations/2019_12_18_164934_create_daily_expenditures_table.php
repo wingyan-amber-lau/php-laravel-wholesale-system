@@ -21,10 +21,11 @@ class CreateDailyExpendituresTable extends Migration
             $table->bigIncrements('id');
             $table->date('balance_date');
             $table->string('expense_item');
-            $table->string('item_descr');
-            $table->decimal('cost',9,2);
-            $table->decimal('paid_amount',9,2);
-            $table->timestamps();
+            $table->string('item_descr')->nullable();
+            $table->decimal('cost',9,2)->nullable();
+            $table->decimal('paid_amount',9,2)->nullable();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

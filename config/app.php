@@ -189,4 +189,10 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+
+    // Company Config
+    'address' => 'Canada',
+    'fax' => '6470000000',
+    'phone' => '6470000000',
+
 ];

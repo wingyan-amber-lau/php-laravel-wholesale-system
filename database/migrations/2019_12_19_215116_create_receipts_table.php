@@ -31,7 +31,8 @@ class CreateReceiptsTable extends Migration
             $table->string('address');
             $table->string('email');
             $table->string('remarks');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

@@ -25,7 +25,8 @@ class CreateProductCategoriesTable extends Migration
             $table->integer('product_id');
             $table->integer('category_id');
             $table->integer('category_value_id');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

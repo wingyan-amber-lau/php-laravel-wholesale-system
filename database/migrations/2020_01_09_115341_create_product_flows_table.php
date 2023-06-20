@@ -28,7 +28,8 @@ class CreateProductFlowsTable extends Migration
             $table->decimal('unit_cost',8,2);
             $table->decimal('unit_price',8,2);
             $table->decimal('discount',8,2);
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

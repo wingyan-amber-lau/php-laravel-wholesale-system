@@ -22,7 +22,7 @@ class AddColumnsToInvoicesTable extends Migration
             // $table->integer('car_no')->after('district_name');
             // $table->integer('order_in_car')->after('car_no');
             $table->string('payment_status')->after('remarks')->default('NONE');
-            $table->string('status')->after('payment_status')->nullable();
+            $table->string('status')->after('payment_status')->default('NONE');
             //
         });
     }

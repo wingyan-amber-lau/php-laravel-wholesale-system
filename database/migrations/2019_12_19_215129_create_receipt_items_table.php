@@ -29,7 +29,8 @@ class CreateReceiptItemsTable extends Migration
             $table->decimal('unit_cost',8,2);
             $table->string('packing');
             $table->integer('receipt_id');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

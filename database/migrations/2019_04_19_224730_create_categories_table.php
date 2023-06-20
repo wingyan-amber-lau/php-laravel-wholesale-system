@@ -22,7 +22,8 @@ class CreateCategoriesTable extends Migration
             $table->string('category_code');
             $table->string('category_name');
             $table->char('for_product',1);
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
 
         DB::table('categories')->insert(

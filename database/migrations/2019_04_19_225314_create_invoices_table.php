@@ -32,7 +32,8 @@ class CreateInvoicesTable extends Migration
             $table->string('district_code');
             $table->decimal('total_amount', 8, 2);
             $table->string('remarks');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

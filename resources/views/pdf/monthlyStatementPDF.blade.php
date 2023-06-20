@@ -25,6 +25,7 @@
 電話：{{config('app.phone'),''}}  傳真：{{config('app.fax'),''}}</div><hr>
 <span class="font-size-18">客戶月結單（{{$delivery_month}}月）</span><br>
 發出日期： {{date('Y-m-d')}}
+@if (count($monthlyStatements) != 0)
 <table style="width:100%;">
 <tr><td style="width:25%">客戶名稱：</td><td>{{$monthlyStatements[0]->customer_name}}</td></tr>
 <tr><td>客戶電話：</td><td>{{$monthlyStatements[0]->phone}}</td></tr>
@@ -54,6 +55,9 @@ $total += $monthlyStatement->total_amount;
 @endforeach
 <tr><th colspan="3" style="text-align:right;" class="font-size-14">總額 (HKD)： </th><th class="font-size-14">{{number_format($total,2)}}</th></tr>
 </table>
+@else
+<br>No invoices found for this month
+@endif
 </div>
 </body>
 </html>

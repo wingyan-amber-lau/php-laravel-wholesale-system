@@ -28,7 +28,8 @@ class CreateSuppliersTable extends Migration
             $table->string('fax')->nullable();
             $table->string('address')->nullable();
             $table->string('email')->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

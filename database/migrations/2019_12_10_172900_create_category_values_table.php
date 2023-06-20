@@ -23,7 +23,8 @@ class CreateCategoryValuesTable extends Migration
             $table->string('value_name');
             $table->integer('order_in_category');
             $table->integer('category_id');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 
