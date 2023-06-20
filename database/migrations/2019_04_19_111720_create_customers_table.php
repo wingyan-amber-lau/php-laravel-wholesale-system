@@ -28,7 +28,8 @@ class CreateCustomersTable extends Migration
             $table->string('fax');
             $table->string('address');
             $table->integer('district_id');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

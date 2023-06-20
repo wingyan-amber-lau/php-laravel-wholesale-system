@@ -34,7 +34,8 @@ class CreateOrdersTable extends Migration
             $table->decimal('total_price',8,2);
             $table->string('packing');
             $table->integer('invoice_id');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

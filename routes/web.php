@@ -80,7 +80,7 @@ Route::group(['middleware' => 'auth'], function() {
     
         Route::get('checklist',[ChecklistsController::class,'getByDate']);
         Route::get('preparationlist',function () {
-            return view('pages.preparationlist',['districts' => App\District::all(),'delivery_date' => date('Y-m-d')]);
+            return view('pages.preparationlist',['districts' => App\Models\District::all(),'delivery_date' => date('Y-m-d')]);
         });
     
         Route::get('dailySettlement',[SettlementsController::class,'getDailyByDate']);

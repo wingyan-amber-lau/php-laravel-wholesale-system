@@ -1,0 +1,14 @@
+{
+    "wt024": {
+        "normal": "\/var\/www\/html\/vendor\/dompdf\/dompdf\\lib\\fonts\\wt024",
+        "bold": "\/var\/www\/html\/vendor\/dompdf\/dompdf\\lib\\fonts\\wt024",
+        "italic": "\/var\/www\/html\/vendor\/dompdf\/dompdf\\lib\\fonts\\wt024",
+        "bold_italic": "\/var\/www\/html\/vendor\/dompdf\/dompdf\\lib\\fonts\\wt024"
+    },
+    "wt002": {
+        "normal": "wt002",
+        "bold": "wt002",
+        "italic": "wt002",
+        "bold_italic": "wt002"
+    }
+}

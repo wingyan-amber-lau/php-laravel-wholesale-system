@@ -27,7 +27,8 @@ class CreateDistrictsTable extends Migration
             $table->boolean('thu');
             $table->boolean('fri');
             $table->boolean('sat');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

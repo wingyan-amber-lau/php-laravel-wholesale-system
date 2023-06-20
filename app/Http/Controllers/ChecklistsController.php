@@ -108,32 +108,42 @@ class ChecklistsController extends Controller
         $weekday = $weekday_map[date('w', strtotime($delivery_date))];
         $checklists = array();
         if ($weekday!='sun'){
-            $sql = "SELECT i.customer_name,
-                    i.invoice_code,
-                    i.payment_status,
-                    i.status,
-                    d.car_no_$weekday car_no,
-                    i.district_name,
+            $sql = "
+            WITH delivery_list AS (
+                SELECT i.customer_name,
+                i.invoice_code,
+                i.payment_status,
+                i.status,
+                d.car_no_$weekday car_no,
+                i.district_name
+                FROM invoices i, 
+                customers c, 
+                districts d,
+                orders o
+                WHERE i.customer_code = c.customer_code
+                AND d.district_code = i.district_code
+                AND o.invoice_code = i.invoice_code
+                AND i.delivery_date = '$delivery_date'
+                AND i.status <> 'VOID'
+                ORDER BY d.car_no_$weekday,
+                d.order_in_car_$weekday,
+                c.district_id,
+                c.delivery_order
+                )
+            SELECT customer_name,
+                    invoice_code,
+                    payment_status,
+                    status,
+                    car_no,
+                    district_name,
                     count(1) cnt
-                    FROM invoices i, 
-                    customers c, 
-                    districts d,
-                    orders o
-                    WHERE i.customer_code = c.customer_code
-                    AND d.district_code = i.district_code
-                    AND o.invoice_code = i.invoice_code
-                    AND i.delivery_date = '$delivery_date'
-                    AND i.status <> 'VOID'
+                    FROM delivery_list
                     GROUP BY i.customer_name,
-                    i.invoice_code,
-                    i.payment_status,
-                    i.status,
-                    d.car_no_$weekday,
-                    i.district_name
-                    ORDER BY d.car_no_$weekday,
-                    d.order_in_car_$weekday,
-                    c.district_id,
-                    c.delivery_order
+                    invoice_code,
+                    payment_status,
+                    status,
+                    car_no,
+                    district_name
                     ";
             $checklists = DB::select($sql);
         }

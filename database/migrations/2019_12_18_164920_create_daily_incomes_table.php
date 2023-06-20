@@ -22,9 +22,10 @@ class CreateDailyIncomesTable extends Migration
             $table->date('balance_date');
             $table->string('income_item');
             $table->string('item_descr');
-            $table->decimal('pending_amount',9,2);
-            $table->decimal('received_amount',9,2);
-            $table->timestamps();
+            $table->decimal('pending_amount',9,2)->nullable();
+            $table->decimal('received_amount',9,2)->nullable();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

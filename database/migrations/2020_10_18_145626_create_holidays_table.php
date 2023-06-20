@@ -23,7 +23,8 @@ class CreateHolidaysTable extends Migration
             $table->string('holiday_name_ch');
             $table->string('holiday_name_en');
             $table->date('holiday_date');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 
