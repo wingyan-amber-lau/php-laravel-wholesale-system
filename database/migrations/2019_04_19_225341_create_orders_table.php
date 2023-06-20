@@ -21,6 +21,7 @@ class CreateOrdersTable extends Migration
             $table->increments('id');
             $table->integer('order_no');
             $table->string('invoice_code');
+            $table->string('category_name');
             $table->string('product_code');
             $table->string('product_name');
             $table->integer('amount');
@@ -28,7 +29,7 @@ class CreateOrdersTable extends Migration
             $table->decimal('unit_cost',8,2)->nullable();
             $table->decimal('unit_price',8,2);
             $table->decimal('discount',8,2);
-            $table->tinyInteger('dscount_once');
+            $table->tinyInteger('discount_once');
             $table->decimal('total_cost',8,2);
             $table->decimal('total_price',8,2);
             $table->string('packing');

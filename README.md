@@ -35,7 +35,7 @@ The system provided with database migration script. The database schema is reusa
 
 ``` 
 composer install
-docker comopse up
+docker compose up
 ```
 
 4. In docker container,

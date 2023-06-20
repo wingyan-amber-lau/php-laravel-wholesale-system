@@ -23,7 +23,14 @@ class CreateInvoicesTable extends Migration
             $table->dateTime('invoice_date');
             $table->date('delivery_date');
             $table->string('customer_code');
-            $table->integer('district_code');
+            $table->string('customer_name');
+            $table->string('payment_method');
+            $table->string('contact_person');
+            $table->string('phone');
+            $table->string('fax');
+            $table->string('address');
+            $table->string('district_code');
+            $table->decimal('total_amount', 8, 2);
             $table->string('remarks');
             $table->timestamps();
         });

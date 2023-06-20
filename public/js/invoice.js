@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    //autocomplete(product_code_autocomplete_path,$("[data-field='product-code']"));
+    autocomplete(product_code_autocomplete_path,$("[data-field='product-code']"));
     autocomplete(customer_code_autocomplete_path,$("#customer-code"));
     autocomplete(phone_autocomplete_path,$("#phone"));
 
