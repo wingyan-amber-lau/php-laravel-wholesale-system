@@ -28,12 +28,16 @@ class InvoicesController extends Controller
         $invoice_setting = DB::table('invoice_settings')
         ->select('text')
         ->first();
-        return view('settings.invoice',['invoice_message' => $invoice_setting->text]);
+        return ['invoice_message' => $invoice_setting->text];
+        // return view('settings.invoice',['invoice_message' => $invoice_setting->text]);
     }
 
     public function saveSetting(Request $request){
-        $data = handleData($request->input('data'));
-        DB::table('invoice_settings')
+        if ($request->input('data') == null)
+            return response("Invalid data",500);
+        // $data = handleData($request->input('data'));
+        $data = $request->input('data');
+        return DB::table('invoice_settings')
         ->update(
             [
                 'text'=>$data['invoice-message'],
@@ -84,9 +88,10 @@ class InvoicesController extends Controller
             $order = Order::where('invoice_id',$invoice->id)->orderBy('order_no')->get()->toArray();
             $invoice->order = stdClassArrToArray($order);
             $invoice->max_row = sizeof($order);
-            return view("pages.order", ["data"=>$invoice]);
+            // return view("pages.order", ["data"=>$invoice]);
         }
-        else return view('pages.order');
+        // else return view('pages.order');
+        return  ["data"=>$invoice];
     }
 
     /**
@@ -185,11 +190,14 @@ class InvoicesController extends Controller
     }
 
     public function getDeliveryDateFromRequest(Request $request){
-        return $this->getDeliveryDate($request->input('district_code'));
+        return $this->getDeliveryDate($request->query('districtCode'));
     }
 
     public function save(Request $request){
-        $data = handleData($request->input('data'));
+        if ($request->input('data') == null)
+            return response("Invalid Data", 500);
+        // $data = handleData($request->input('data'));
+        $data = $request->input('data');
         //return $this->exist($data['invoice-code']);
         if (!$this->exist(substr($data['invoice-code'],3))){
             return $this->insert($data);
@@ -232,7 +240,7 @@ class InvoicesController extends Controller
     public function insertInvoiceItem($data,$invoice_id,$invoice_code){
         $order_no = 1;
         for ($i=1;$i<=$data['max-row'];$i++){
-            if ($data[$i.'-total-price']){
+            if (isset($data[$i.'-total-price']) && $data[$i.'-total-price']){
                 Order::insert(
                         [
                             'order_no'=>$order_no,
@@ -303,7 +311,7 @@ class InvoicesController extends Controller
         Order::where('invoice_code',$invoice_code)->delete();
         $order_no = 1;
         for ($i=1;$i<=$data['max-row'];$i++){
-            if ($data[$i.'-total-price']){
+            if (isset($data[$i.'-total-price']) && $data[$i.'-total-price']){
                 Order::insert(
                         [
                             'order_no'=>$order_no,
@@ -370,9 +378,9 @@ class InvoicesController extends Controller
     }
 
     public function getNext(Request $request){
-        $invoice_code = $request->input('invoice_code');
-        $all_or_customer = $request->input('all_or_customer');
-        $customer_code = $request->input('customer_code');
+        $invoice_code = $request->query('invoiceCode');
+        $all_or_customer = $request->query('allOrCustomer');
+        $customer_code = $request->query('customerCode');
         if ($all_or_customer == 'customer')
             $where_clause = ' AND customer_code=:customer_code';
         else $where_clause = '';
@@ -393,9 +401,9 @@ class InvoicesController extends Controller
     }
 
     public function getPrev(Request $request){
-        $invoice_code = $request->input('invoice_code');
-        $all_or_customer = $request->input('all_or_customer');
-        $customer_code = $request->input('customer_code');
+        $invoice_code = $request->input('invoiceCode');
+        $all_or_customer = $request->input('allOrCustomer');
+        $customer_code = $request->input('customerCode');
         //$invoice_code = '201904200004';
         if (!$invoice_code){
             $invoice_code = '999999999999';
@@ -502,8 +510,8 @@ class InvoicesController extends Controller
         if ($invoices){
             //$search_result = stdClassArrToArray($search_result);
             //$invoices = arrayPaginator($invoices, $request);
-            return view("search.searchInvoice", ["data"=>$data,"invoices"=>$invoices,"districts"=>District::all()]);
-        }else return view("search.searchInvoice", ["data"=>$data,"invoices"=>0,"districts"=>District::all()]);;
+            return ["data"=>$data,"invoices"=>$invoices,"districts"=>District::all()];
+        }else return ["data"=>$data,"invoices"=>0,"districts"=>District::all()];
 
 
     }
@@ -603,7 +611,7 @@ class InvoicesController extends Controller
 
     public function void(Request $request){
         $invoice_code = $request->input('invoice_code');
-        DB::table('invoices')
+        return DB::table('invoices')
         ->where('invoice_code',$invoice_code)
         ->update(['status'=>'VOID']);
     }

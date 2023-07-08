@@ -27,7 +27,7 @@ class CreateProductsTable extends Migration
             $table->decimal('unit_cost',8,2);
             $table->string('packing');
             $table->tinyInteger('count_inventory');
-            $table->string('remarks');
+            $table->string('remarks')->nullable();
             $table->integer('category_value_id');
 
             $table->timestamp('created_at')->useCurrent();

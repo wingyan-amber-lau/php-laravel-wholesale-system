@@ -45,7 +45,8 @@ class CustomersController extends Controller
                 WHERE c.id = cv.category_id 
                 AND c.category_code = 'PYM'";
         $payment_methods = DB::select($sql);
-        return view('settings.customer',['customers'=>$customers,'districts'=>$districts,'payment_methods'=>$payment_methods]);
+        return ['customers'=>$customers,'districts'=>$districts,'payment_methods'=>$payment_methods];
+        // return view('settings.customer',['customers'=>$customers,'districts'=>$districts,'payment_methods'=>$payment_methods]);
     }
 
 
@@ -122,16 +123,18 @@ class CustomersController extends Controller
 
     public function getCustomer(Request $request)
     {
-        $customer_code = $request->input('customerCode');
-        $invoice_id = $request->input('invoice_id');
-        $phone = $request->input('phone');
-        $code_or_phone = $request->input('code_or_phone');
+        $customer_code = $request->query('customerCode');
+        $invoice_id = $request->query('invoiceId');
+        $phone = $request->query('phone');
+        $code_or_phone = $request->query('codeOrPhone');
         if ($invoice_id == "")
             $invoice_id = 0;
         if ($code_or_phone == 'customer_code')
             $customer = $this->getByIDForInovice($customer_code);
         elseif ($code_or_phone == 'phone')
             $customer = $this->getByPhoneForInvoice($phone);
+        // to check whether invoice exists for the customer already
+        // TODO: separate to different endpoint
         $sql = "SELECT 1 FROM invoices WHERE customer_code = '$customer.customer_code' AND status = 'PREP' AND id <> $invoice_id";
         $duplicate_invoice = DB::select($sql);
         $duplicate_invoice = count($duplicate_invoice);
@@ -198,23 +201,27 @@ class CustomersController extends Controller
         //
     }
 
-    public function getByID(Request $request)
+    public function getByID($id)
     {
-        $customer_id = $request->input('customer_id');
-        $customer = DB::table('customers')
+        // $customer_id = $request->input('customer_id');
+        return $customer = DB::table('customers')
                     ->join('districts','customers.district_id','districts.id')
                     ->select('customers.*','districts.district_code','districts.district_name')
-                    ->where('customers.id',$customer_id)
-                    ->get();
+                    ->where('customers.id',$id)
+                    ->first();
         //$customer = Customer::where('customer_code',$customer_code)->first();
         //$msg = "This is a simple message.";
         //return $customer;
-        return response()->json(array('customer'=> $customer), 200);
+        
+        // return response()->json($customer, 200);
         //
     }
 
     public function save(Request $request){
-        $data = handleData($request->input('data'));
+        if ($request->input('data') == null)
+            return response('Invalid Data',500);
+        // $data = handleData($request->input('data'));
+        $data = $request->input('data');
         $delivery_order = $data['delivery-order'];
         if ($delivery_order == 0){
             $sql = "SELECT MAX(delivery_order) delivery_order 
@@ -223,7 +230,7 @@ class CustomersController extends Controller
             $delivery_order = DB::select($sql);
             $delivery_order = $delivery_order[0]->delivery_order + 1;
         }
-        Customer::updateOrCreate(
+        return Customer::updateOrCreate(
                 [
                     'id'=>$data['customer-id']
                 ],
@@ -243,27 +250,36 @@ class CustomersController extends Controller
         );
     }
 
-    public function getDeliveryOrderByDistrictID(Request $request){
-        $district_id = $request->input('district_id');
+    public function getDeliveryOrderByDistrictID($district_id){
+        // $district_id = $request->input('district_id');
         $sql = "SELECT customer_code,
                 customer_name 
                 FROM customers 
-                WHERE district_id = $district_id 
+                WHERE district_id = ?
                 ORDER BY delivery_order";
-        $customers = DB::select($sql);
-        $customers = stdClassArrToArray($customers);
-        return response()->json(array('customers'=> $customers), 200);
+        $customers = DB::select($sql,[$district_id]);
+        return $customers;
+        // $customers = stdClassArrToArray($customers);
+        // return response()->json(array('customers'=> $customers), 200);
     }
 
-    public function saveDeliveryOrder(Request $request){
+    public function saveDeliveryOrder(Request $request, $id){
         $customers = $request->input('customer_order');
+        Log::debug($customers);
         if (!$customers)
             return;
-        foreach($customers as $ind=>$customer){
-            DB::table('customers')
-                ->where('customer_code',$customer)
-                ->update(['delivery_order'=> $ind+1]);
+        try{
+            foreach($customers as $ind=>$customer){
+                DB::table('customers')
+                    ->where('customer_code',$customer)
+                    ->where('district_id',$id)
+                    ->update(['delivery_order'=> $ind+1]);
+            }
         }
+        catch (Exception $e){
+            return response('Error: '.$e->getMessage(),500);
+        }
+        
     }
 
     public function getPhoneList(){
@@ -280,7 +296,8 @@ class CustomersController extends Controller
         ORDER BY c.district_id, 
         c.customer_code";
         $phonelists = DB::select($sql);
-        return view('pages.phoneList',['phonelists'=>$phonelists]);
+        return $phonelists;
+        // return view('pages.phoneList',['phonelists'=>$phonelists]);
     }
 
     public function autocomplete(Request $request)

@@ -140,7 +140,7 @@ class SettlementsController extends Controller
     }
 
     private function updateDailyIncome($balance_date,$value,$data){
-        DB::table('daily_incomes')
+        return DB::table('daily_incomes')
         ->updateOrInsert(
             [
                 'balance_date' => $balance_date,
@@ -155,7 +155,7 @@ class SettlementsController extends Controller
 
     private function updateDailyExpenditure($balance_date,$value,$data){
         //TODO:add checking for valid importor
-        DB::table('daily_expenditures')
+        return DB::table('daily_expenditures')
         ->updateOrInsert(
             [
                 'balance_date' => $balance_date,
@@ -168,8 +168,8 @@ class SettlementsController extends Controller
     }
 
     public function monthlyStatements(Request $request){
-        $customer_code = $request->input('customer-code');
-        $delivery_month = $request->input('delivery-month');
+        $customer_code = $request->input('customerCode');
+        $delivery_month = $request->input('deliveryMonth');
         $sql = "SELECT i.customer_code,
                 i.customer_name,
                 i.invoice_code,
@@ -196,10 +196,12 @@ class SettlementsController extends Controller
         $monthlyStatements = DB::select($sql,$criteria);
         $delivery_month_chi = str_replace('-','年',$delivery_month);
         $data = ["monthlyStatements"=>$monthlyStatements, "delivery_month"=>$delivery_month_chi];
+        return $data;
+        // if (count($monthlyStatements))
+        //     return view('statistics.monthlyStatement');
+        // $pdf = PDF::loadView('pdf.monthlyStatementPDF', $data);
 
-        $pdf = PDF::loadView('pdf.monthlyStatementPDF', $data);
-
-        return $pdf->stream('monthlyStatement_'.$customer_code.'_'.$delivery_month.'.pdf');
+        // return $pdf->stream('monthlyStatement_'.$customer_code.'_'.$delivery_month.'.pdf');
     }
 
     public function showMonthlyStatementPage(){

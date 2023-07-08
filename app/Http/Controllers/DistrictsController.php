@@ -23,7 +23,9 @@ class DistrictsController extends Controller
         $sql = 'SELECT * FROM districts';
         $districts = DB::select($sql);
         //$districts = arrayPaginator($districts, $request);
-        return view('settings.district',['districts'=>$districts]);
+        // return view('settings.district',['districts'=>$districts]);
+        return ['districts'=>$districts];
+        // return District::all();
     }
 
     /**
@@ -99,21 +101,17 @@ class DistrictsController extends Controller
         return $districts;
     }
 
-    public function getByID(Request $request)
+    public function getByID($id)
     {
-        $district_id = $request->input('district_id');
-        $district = District::where('id',$district_id)
-                    ->get();
-        //$district = district::where('district_code',$district_code)->first();
-        //$msg = "This is a simple message.";
-        //return $district;
-        return response()->json(array('district'=> $district), 200);
-        //
+        return District::where('id',$id)->first();
     }
 
     public function save(Request $request){
-        $data = handleData($request->input('data'));
-        $result = District::updateOrCreate(
+        if ($request->input('data') == null)
+            return response("Invalid Data",500);
+        // $data = handleData($request->input('data'));
+        $data = $request->input('data');
+        return District::updateOrCreate(
                 [
                     'id'=>$data['district-id']
                 ],
