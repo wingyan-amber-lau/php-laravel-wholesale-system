@@ -63,9 +63,10 @@ class ReceiptsController extends Controller
             $receipt_items = ReceiptItem::where('receipt_id',$receipt->id)->orderBy('item_no')->get()->toArray();
             $receipt->receipt_items = stdClassArrToArray($receipt_items);
             $receipt->max_row = sizeof($receipt_items);
-            return view("pages.receipt", ["data"=>$receipt]);
+            // return view("pages.receipt", ["data"=>$receipt]);
         }
-        else return view('pages.receipt');
+        // else return view('pages.receipt');
+        return ["data"=>$receipt];
     }
 
     /**
@@ -156,7 +157,9 @@ class ReceiptsController extends Controller
     }*/
 
     public function save(Request $request){
-        $data = handleData($request->input('data'));
+        if ($request->input('data') == null)
+            return response("Invalid Data", 500);
+        $data = $request->input('data');
         //return $this->exist($data['receipt-code']);
         if (!$this->exist($data['receipt-code'])){
             return $this->insert($data);
@@ -198,7 +201,7 @@ class ReceiptsController extends Controller
     public function insertReceiptItem($data,$receipt_id,$receipt_code){
         $order_no = 1;
         for ($i=1;$i<=$data['max-row'];$i++){
-            if ($data[$i.'-total-cost']){
+            if (isset($data[$i.'-total-cost']) && $data[$i.'-total-cost']){
                 ReceiptItem::insert(
                         [
                             'item_no'=>$order_no,
@@ -242,16 +245,16 @@ class ReceiptsController extends Controller
             ]
         );
 
-            $this->updateReceiptItem($data,$receipt_code);
-            return response()->json(array('receipt_code'=> $receipt_code), 200);
+            $this->updateReceiptItem($data,$data['receipt-code']);
+            return response()->json(array('receipt_code'=> $data['receipt-code']), 200);
 
     }
 
     public function updateReceiptItem($data,$receipt_code){
-        Order::where('receipt_code',$receipt_code)->delete();
+        ReceiptItem::where('receipt_code',$receipt_code)->delete();
         $order_no = 1;
         for ($i=1;$i<=$data['max-row'];$i++){
-            if ($data[$i.'-total-cost']){
+            if (isset($data[$i.'-total-cost']) && $data[$i.'-total-cost']){
                 ReceiptItem::insert(
                         [
                             'item_no'=>$order_no,
@@ -302,9 +305,9 @@ class ReceiptsController extends Controller
     }*/
 
     public function getNext(Request $request){
-        $receipt_id = $request->input('receipt_id');
-        $all_or_supplier = $request->input('all_or_supplier');
-        $supplier_code = $request->input('supplier_code');
+        $receipt_id = $request->query('receiptId');
+        $all_or_supplier = $request->query('allOrSupplier');
+        $supplier_code = $request->query('supplierCode');
         if ($all_or_supplier == 'supplier')
             $where_clause = ' AND supplier_code=:supplier_code';
         else $where_clause = '';
@@ -325,9 +328,9 @@ class ReceiptsController extends Controller
     }
 
     public function getPrev(Request $request){
-        $receipt_id = $request->input('receipt_id');
-        $all_or_supplier = $request->input('all_or_supplier');
-        $supplier_code = $request->input('supplier_code');
+        $receipt_id = $request->query('receiptId');
+        $all_or_supplier = $request->query('allOrSupplier');
+        $supplier_code = $request->query('supplierCode');
         //$receipt_code = '201904200004';
         if (!$receipt_id){
             $receipt_id = '999999999999';
@@ -407,8 +410,8 @@ class ReceiptsController extends Controller
         if ($receipts){
             //$search_result = stdClassArrToArray($search_result);
             //$receipts = arrayPaginator($receipts, $request);
-            return view("search.searchReceipt", ["data"=>$data,"receipts"=>$receipts]);
-        }else return view("search.searchReceipt", ["data"=>$data,"receipts"=>0]);;
+            return ["data"=>$data,"receipts"=>$receipts];
+        }else return ["data"=>$data,"receipts"=>0];
 
 
     }

@@ -101,8 +101,8 @@ class ChecklistsController extends Controller
             6 => 'sat',
         );
 
-        if ($request->input('delivery-date'))
-            $delivery_date = $request->input('delivery-date');
+        if ($request->query('deliveryDate'))
+            $delivery_date = $request->query('deliveryDate');
         else $delivery_date = date('Y-m-d');
        // else $delivery_date = '2019-03-15';
         $weekday = $weekday_map[date('w', strtotime($delivery_date))];
@@ -123,7 +123,7 @@ class ChecklistsController extends Controller
                 WHERE i.customer_code = c.customer_code
                 AND d.district_code = i.district_code
                 AND o.invoice_code = i.invoice_code
-                AND i.delivery_date = '$delivery_date'
+                AND i.delivery_date = :delivery_date
                 AND i.status <> 'VOID'
                 ORDER BY d.car_no_$weekday,
                 d.order_in_car_$weekday,
@@ -145,10 +145,13 @@ class ChecklistsController extends Controller
                     car_no,
                     district_name
                     ";
-            $checklists = DB::select($sql);
+            $criteria = [
+                "delivery_date" => $delivery_date
+            ];
+            $checklists = DB::select($sql, $criteria);
         }
         //$checklists = stdClassArrToArray($checklists);
-        return view("pages.checklist", ["checklists"=>$checklists, "delivery_date"=>$delivery_date]);
+        return ["checklists"=>$checklists, "delivery_date"=>$delivery_date];
     }
 
     public function changeStatus(Request $request){
@@ -157,7 +160,7 @@ class ChecklistsController extends Controller
         if ($payment_status == 'NONE')
             $status = 'PREP';
         else $status = 'DELV';
-        DB::table('invoices')
+        return DB::table('invoices')
             ->where('invoice_code',$invoice_code)
             ->update(['payment_status' => $payment_status, 'status' => $status]);
     }

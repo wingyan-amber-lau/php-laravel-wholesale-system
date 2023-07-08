@@ -45,7 +45,8 @@ class ProductsController extends Controller
                             WHERE for_product = 1";
         $other_categories = DB::select($other_cat_sql);
         //$categories = stdClassArrToArray($categories);
-        return view('settings.product',['products'=>$products,'categories'=>$categories,'other_categories'=>$other_categories]);
+        // return view('settings.product',['products'=>$products,'categories'=>$categories,'other_categories'=>$other_categories]);
+        return ['products'=>$products,'categories'=>$categories,'other_categories'=>$other_categories];
     }
 
     /**
@@ -116,8 +117,8 @@ class ProductsController extends Controller
 
     public function getProduct(Request $request)
     {
-        $product_code = strtoupper($request->input('productCode'));
-        $customer_code = strtoupper($request->input('customerCode'));
+        $product_code = strtoupper($request->query('productCode'));
+        $customer_code = strtoupper($request->query('customerCode'));
         $cust_selling_price = DB::table('customer_selling_prices')
                     ->where('customer_selling_prices.product_code',$product_code)
                     ->where('customer_selling_prices.customer_code',$customer_code)
@@ -139,9 +140,9 @@ class ProductsController extends Controller
     }
 
     public function getProductLast5Order(Request $request){
-        $product_code = $request->input('product_code');
-        $customer_code = $request->input('customer_code');
-        $invoice_id = $request->input('invoice_id');
+        $customer_code = $request->query('customerCode');
+        $product_code = $request->query('productCode'); 
+        $invoice_id = $request->query('invoiceId');
         $sql = "SELECT inv.invoice_code,
                     inv.delivery_date,
                     o.amount,
@@ -167,72 +168,86 @@ class ProductsController extends Controller
         else return "沒有紀錄。";
     }
 
-    public function getByID(Request $request)
+    public function getByID($id)
     {
-        $product_id = $request->input('product_id');
+        // $product_id = $request->input('product_id');
         $product = DB::table('products')
                     ->join('category_values','products.category_value_id','category_values.id')
                     ->select('products.*','category_values.value_code','category_values.value_name')
-                    ->where('products.id',$product_id)
+                    ->where('products.id',$id)
                     ->get();
         $sql = "SELECT pc.category_id,
                 pc.category_value_id 
                 FROM product_categories  pc,
                 categories c
-                WHERE pc.product_id = $product_id
+                WHERE pc.product_id = ?
                 AND c.id = pc.category_id
                 AND c.for_product = 1";
-        $category_values = DB::select($sql);
-        $category_values = stdClassArrToArray($category_values);
+        $category_values = DB::select($sql,[$id]);
+        // $category_values = stdClassArrToArray($category_values);
         //$customer = Customer::where('customer_code',$customer_code)->first();
         //$msg = "This is a simple message.";
         //return $customer;
-        return response()->json(array('product'=> $product,'category_values'=>$category_values), 200);
+        return response()->json(
+            [
+                'product'=> $product,
+                'category_values'=>$category_values
+            ], 200);
         //
     }
 
     public function save(Request $request){
-        $data = handleData($request->input('data'));
-        $id = Product::updateOrCreate(
-                [
-                    'id'=>$data['product-id']
-                ],
-                [
-                    'product_code'=>strtoupper($data['product-code']),
-                    'product_name'=>$data['product-name'],
-                    'unit'=>$data['unit'],
-                    'unit_price'=>$data['unit-price'],
-                    'unit_cost'=>$data['unit-cost'],
-                    'packing'=>$data['packing'],
-                    'remarks'=>$data['remarks'],
-                    'count_inventory'=>isset($data['count-inventory'])?1:0,
-                    'category_value_id'=>$data['category']
-                ]
-        )->id;
-        ProductCategory::where('product_id', '=', $id)->delete();
-        for($i=1;$i<5;$i++){
-            if (isset($data[$i.'-category-id']) && isset($data[$i.'-category-value-id'])){
-                ProductCategory::updateOrCreate(
+        if ($request->input('data') == null)
+            return response('Invalid Data',500);
+        
+        // $data = handleData($request->input('data'));
+        $data = $request->input('data');
+        try {
+            $id = Product::updateOrCreate(
                     [
-                        'category_id' => $data[$i.'-category-id'],
-                        'product_id' => $id
+                        'id'=>$data['product-id']
                     ],
                     [
-                        'category_value_id' => $data[$i.'-category-value-id'],
-                        'product_code'=>strtoupper($data['product-code'])
+                        'product_code'=>strtoupper($data['product-code']),
+                        'product_name'=>$data['product-name'],
+                        'inner_packing'=>$data['inner-packing'],
+                        'unit'=>$data['unit'],
+                        'unit_price'=>$data['unit-price'],
+                        'unit_cost'=>$data['unit-cost'],
+                        'packing'=>$data['packing'],
+                        'remarks'=>$data['remarks'],
+                        'count_inventory'=>isset($data['count-inventory'])?1:0,
+                        'category_value_id'=>$data['category']
                     ]
-                );
+            )->id;
+            ProductCategory::where('product_id', '=', $id)->delete();
+            for($i=1;$i<5;$i++){
+                if (isset($data[$i.'-category-id']) && isset($data[$i.'-category-value-id'])){
+                    ProductCategory::updateOrCreate(
+                        [
+                            'category_id' => $data[$i.'-category-id'],
+                            'product_id' => $id
+                        ],
+                        [
+                            'category_value_id' => $data[$i.'-category-value-id'],
+                            'product_code'=>strtoupper($data['product-code'])
+                        ]
+                    );
+                }
             }
+        }
+        catch (Exception $e){
+            return response('Error: '.$e->getMessage(),500);
         }
     }
 
     public function genPreparationList(Request $request){
-        if ($request->input('delivery-date'))
-            $delivery_date = $request->input('delivery-date');
+        if ($request->query('deliveryDate'))
+            $delivery_date = $request->query('deliveryDate');
         //else $delivery_date = date('Y-m-d');
         else $delivery_date = '';
-        if ($request->input('district-code')){
-            $district_codes = $request->input('district-code');
+        if ($request->query('districtCode')){
+            $district_codes = $request->query('districtCode');
             foreach ($district_codes as $ind=>$district_code){
                 $district_codes[$ind] = "'".$district_code."'";
             }
@@ -264,10 +279,11 @@ class ProductsController extends Controller
         $preparationlists = DB::select($sql);
         $data = ["preparationlists"=>$preparationlists, "delivery_date"=>$delivery_date,"district_code"=>$district_code];
         //var_dump($invoices);
-        $pdf = PDF::loadView('pdf.preparationlistPDF', $data);
+        return $data;
+        // $pdf = PDF::loadView('pdf.preparationlistPDF', $data);
 
         //return $pdf->download('itsolutionstuff.pdf');
-        return $pdf->stream();
+        // return $pdf->stream();
     }
 
     public function autocomplete(Request $request)
@@ -281,17 +297,16 @@ class ProductsController extends Controller
                 {
                     $dataModified[] = $data->product_code;
                 }*/
-        
-                return response()->json($data);
+        return response()->json($data);
         
                 
     }
 
     public function checkDuplicateProductOnSameDeliveryDate(Request $request){
-        $invoice_id = ($request->input('invoice_id'))?$request->input('invoice_id'):0;
-        $product_code = $request->input('productCode');
-        $customer_code = $request->input('customer_code');
-        $delivery_date = $request->input('delivery_date');
+        $invoice_id = ($request->query('invoiceId'))?$request->query('invoiceId'):0;
+        $product_code = $request->query('productCode');
+        $customer_code = $request->query('customerCode');
+        $delivery_date = $request->query('deliveryDate');
         $sql = "SELECT 1
                 FROM invoices i,
                 orders o

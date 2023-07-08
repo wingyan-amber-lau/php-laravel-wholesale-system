@@ -171,6 +171,8 @@ return [
 
         //PDF
         Barryvdh\DomPDF\ServiceProvider::class,
+
+        // Laravel\Passport\PassportServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -195,4 +197,7 @@ return [
     'fax' => '6470000000',
     'phone' => '6470000000',
 
+
+    // login_url
+    'login_url' => env('LOGIN_URL',"http://localhost"),
 ];

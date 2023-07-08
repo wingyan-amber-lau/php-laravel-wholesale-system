@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->string('payment_method')->after('delivery_order');
-            $table->char('untrade', 1)->after('payment_method');
-            $table->string('remarks')->after('untrade')->nullable();
-            //
+        Schema::create('oauth_refresh_tokens', function (Blueprint $table) {
+            $table->string('id', 100)->primary();
+            $table->string('access_token_id', 100)->index();
+            $table->boolean('revoked');
+            $table->dateTime('expires_at')->nullable();
         });
     }
 
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('oauth_refresh_tokens');
     }
 };

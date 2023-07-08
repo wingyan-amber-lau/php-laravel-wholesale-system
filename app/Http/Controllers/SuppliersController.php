@@ -31,8 +31,8 @@ class SuppliersController extends Controller
                     c.email
                 FROM suppliers c';
         $suppliers = DB::select($sql);
-        
-        return view('settings.supplier',['suppliers'=>$suppliers]);
+        return ['suppliers'=>$suppliers];
+        // return view('settings.supplier',['suppliers'=>$suppliers]);
     }
 
 
@@ -109,11 +109,11 @@ class SuppliersController extends Controller
 
     public function getSupplier(Request $request)
     {
-        $supplier_code = $request->input('supplierCode');
+        $supplier_code = $request->query('supplierCode');
         $supplier = DB::table('suppliers')
                     ->select('suppliers.*')
                     ->where('suppliers.supplier_code',$supplier_code)
-                    ->get();
+                    ->first();
         //$sql = "SELECT 1 FROM invoices WHERE supplier_code = '$supplier_code' AND status = 'PREP'";
         //$duplicate_invoice = DB::select($sql);
         //$duplicate_invoice = count($duplicate_invoice);
@@ -122,20 +122,22 @@ class SuppliersController extends Controller
         //
     }
 
-    public function getByID(Request $request)
+    public function getByID($id)
     {
-        $supplier_id = $request->input('supplier_id');
-        $supplier = DB::table('suppliers')
+        return $supplier = DB::table('suppliers')
                     ->select('suppliers.*')
-                    ->where('suppliers.id',$supplier_id)
-                    ->get();
-        return response()->json(array('supplier'=> $supplier), 200);
+                    ->where('suppliers.id',$id)
+                    ->first();
+        // return response()->json(array('supplier'=> $supplier), 200);
         //
     }
 
     public function save(Request $request){
-        $data = handleData($request->input('data'));        
-        Supplier::updateOrCreate(
+        if ($request->input('data') == null)
+            return response("Invalid Data",500);
+        // $data = handleData($request->input('data'));        
+        $data = $request->input('data');        
+        return Supplier::updateOrCreate(
                 [
                     'id'=>$data['supplier-id']
                 ],

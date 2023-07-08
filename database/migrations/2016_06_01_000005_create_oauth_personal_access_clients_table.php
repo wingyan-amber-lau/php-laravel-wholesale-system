@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->string('payment_method')->after('delivery_order');
-            $table->char('untrade', 1)->after('payment_method');
-            $table->string('remarks')->after('untrade')->nullable();
-            //
+        Schema::create('oauth_personal_access_clients', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('client_id');
+            $table->timestamps();
         });
     }
 
@@ -24,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('oauth_personal_access_clients');
     }
 };

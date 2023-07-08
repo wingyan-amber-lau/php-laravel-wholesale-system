@@ -31,6 +31,7 @@ class CreateReceiptsTable extends Migration
             $table->string('address');
             $table->string('email');
             $table->string('remarks');
+            $table->decimal('total_amount', 8, 2);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
