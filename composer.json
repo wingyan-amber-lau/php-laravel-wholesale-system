@@ -11,7 +11,8 @@
         "laravel/framework": "^10.10",
         "laravel/passport": "^11.8",
         "laravel/sanctum": "^3.2",
-        "laravel/tinker": "^2.8"
+        "laravel/tinker": "^2.8",
+        "league/oauth2-server": "^8.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
